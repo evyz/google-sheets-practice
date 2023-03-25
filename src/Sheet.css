@@ -1,0 +1,21 @@
+.right-bottom-one{
+    position: fixed;
+    margin-right: 200px;
+    background-color: rgb(219, 219, 219);
+    right: 0;
+    bottom: 0;
+}
+.right-bottom-two{
+    position: fixed;
+    background-color: rgb(219, 219, 219);
+    right: 0;
+    bottom: 0;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+}
+.stic{
+    position: relative;
+    right: 0;
+}
