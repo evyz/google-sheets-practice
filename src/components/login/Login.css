@@ -7,7 +7,7 @@
     justify-content: center;
     color: rgb(125, 126, 128);
     /* background-color: rgb(18, 129, 86); */
-    background: linear-gradient(to bottom, #236423, #3cf774);
+    background: linear-gradient(to bottom, #bdbdbd, #8f8f8f);
 }
 .Registration-block{
     width: 600px;
@@ -18,14 +18,14 @@
     justify-content: center;
     flex-direction: column;
     /* background-color: rgb(178, 241, 199); */
-    background: linear-gradient(to bottom, #c8dfc8, #79887d);
+    background: linear-gradient(to bottom, #c8cadf, #7d7988);
 }
 .regist-name{
     width: 400px;
     height: 30px;
     border-radius: 6px;
     /* border: 0.5px, solid; */
-    background-color:rgba(138, 241, 172, 0.274);
+    background: linear-gradient(to bottom, #bdbdbd, #8f8f8f);
 }
 .green-batton{
     width: 100px;
@@ -33,5 +33,5 @@
     border-radius: 10px;
     cursor: pointer;
     border: none;
-    background: linear-gradient(to bottom, #399b39, #3cf774);
+    background: linear-gradient(to bottom, #bdbdbd, #8f8f8f);
 }
