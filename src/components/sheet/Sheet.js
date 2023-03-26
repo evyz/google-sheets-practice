@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Cell from "../cell/Cell";
 import "./Sheet.css";
-function Sheet() {
+function Sheet({ props, backHandler }) {
   const [matrix, setMatrix] = useState([]);
   const [counts, setCounts] = useState({ x: 4, y: 2 });
   const [isLoading, setIsLoading] = useState(true);
@@ -38,38 +38,49 @@ function Sheet() {
 
   return (
     <div>
-      <button
-        type='button'
-        class='btn btn-light right-bottom-one'
-        onClick={() => handleButtonClick("add", "y")}
-      >
-        Добавить Вертикаль
-      </button>
-      <button
-        type='button'
-        class='btn btn-light right-bottom-two'
-        onClick={() => handleButtonClick("add", "x")}
-      >
-        Добавить Горизонталь
-      </button>
+      <div style={{ width: "100%", height: "10vh" }}>
+        <button
+          type='button'
+          class='btn btn-danger'
+          onClick={() => backHandler()}
+        >
+          Закрыть таблицу
+        </button>
+        <button
+          type='button'
+          class='btn btn-light'
+          onClick={() => handleButtonClick("add", "y")}
+        >
+          Добавить Вертикаль
+        </button>
+        <button
+          type='button'
+          class='btn btn-light'
+          onClick={() => handleButtonClick("add", "x")}
+        >
+          Добавить Горизонталь
+        </button>
+      </div>
       {!isLoading && matrix.length > 0 && (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              {matrix[0].map((item, index) => (
-                <td>{index + 1}</td>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {matrix.map((row) => (
+        <div className='default-table'>
+          <Table striped bordered hover>
+            <thead>
               <tr>
-                {row.length > 0 && row.map((cell) => <Cell props={cell} />)}
+                {matrix[0].map((item, index) => (
+                  <td>{index + 1}</td>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+
+            <tbody>
+              {matrix.map((row) => (
+                <tr>
+                  {row.length > 0 && row.map((cell) => <Cell props={cell} />)}
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       )}
     </div>
   );

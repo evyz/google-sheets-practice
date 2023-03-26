@@ -1,12 +1,12 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Auth from "./Auth";
-import Sheet from "./components/sheet/Sheet";
+import Sheets from "./components/sheets/sheets";
 
 function App() {
   return (
     <div className='App'>
       <Auth>
-        <Sheet />
+        <Sheets />
       </Auth>
     </div>
   );
