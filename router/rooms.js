@@ -8,7 +8,18 @@ router.get("/rooms", (req, res) => {
 
   if (author && users.find((item) => item.name === author)) {
     let connect = connections.filter((item) => item.authorId === author);
-    return res.json(connect);
+    // let rooms = rooms.map((item) => {
+    // if(item.id === )
+    let arr = [];
+
+    rooms.forEach((room) => {
+      let check = connect.find((item) => item.roomId === room.id);
+      if (check) {
+        arr.push(room);
+      }
+    });
+
+    return res.json(rooms);
   }
 
   throw new Error("Not found name or author in req.body");
