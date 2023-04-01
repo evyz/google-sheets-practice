@@ -30,4 +30,21 @@ router.post("/:id", (req, res) => {
   return res.json(connection);
 });
 
+router.get("/:id", (req, res) => {
+  let roomId = req.params.id;
+  roomId = Number(roomId);
+
+  if (roomId && rooms.find((room) => room.id === roomId)) {
+    let id = rooms.find((room) => room.id === roomId).id;
+    let arr = [];
+    connections = connections.forEach(
+      (connect) => connect.roomId === id && arr.push(connect.authorId)
+    );
+
+    return res.json(arr);
+  }
+
+  return res.json({});
+});
+
 module.exports = router;
