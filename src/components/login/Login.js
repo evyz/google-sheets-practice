@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../../http/user";
+import { login, register } from "../../http/user";
 import "./Login.css";
 function Login({ user, setUser }) {
   const [name, setName] = useState("");
@@ -17,8 +17,10 @@ function Login({ user, setUser }) {
   }
 
   function handleRegisterApi() {
-    // функция на регистрацию
-
+    register(name).then((data) => {
+      setUser(name);
+      localStorage.setItem("nickname", name);
+    });
   }
 
   function handleNameChange(event) {
@@ -28,32 +30,31 @@ function Login({ user, setUser }) {
   if (isRegisterForm) {
     return (
       <div>
-         <div className='Registration-window'>
-      <div className='Registration-block'>
-        <h1>Регистрация</h1>
-        <input
-        style={{border:"none"}}
-          className='regist-name'
-          placeholder='Введите имя'
-          value={name}
-          onChange={handleNameChange}
-        />
-                <input
-                style={{width:"300px",border:"none",margin:"5px"}}
-          className='regist-name'
-          placeholder='Введите email'
-          value={name}
-          onChange={handleNameChange}
-        />
-<button type="button" class="btn btn-primary">Вход</button>
-        <span>
-          Есть аккаунт?{" "}
-          <span onClick={() => setIsRegisterForm(false)}>Авторизуйтесь</span>
-        </span>
-      </div>
-    </div>
-        {/* Сделать форму регистрации здесь */}
-
+        <div className='Registration-window'>
+          <div className='Registration-block'>
+            <h1>Регистрация</h1>
+            <input
+              style={{ border: "none" }}
+              className='regist-name'
+              placeholder='Введите имя'
+              value={name}
+              onChange={handleNameChange}
+            />
+            <button
+              onClick={() => handleRegisterApi()}
+              type='button'
+              class='btn btn-primary'
+            >
+              Зарегистироваться
+            </button>
+            <span>
+              Есть аккаунт?{" "}
+              <span onClick={() => setIsRegisterForm(false)}>
+                Авторизуйтесь
+              </span>
+            </span>
+          </div>
+        </div>
       </div>
     );
   }
@@ -63,13 +64,13 @@ function Login({ user, setUser }) {
       <div className='Registration-block'>
         <h1>Авторизация</h1>
         <input
-        style={{border:"none",margin:"5px"}}
+          style={{ border: "none", margin: "5px" }}
           className='regist-name'
           placeholder='Введите имя'
           value={name}
           onChange={handleNameChange}
         />
-        <button class="btn btn-primary" onClick={handleBtnClick}>
+        <button class='btn btn-primary' onClick={handleBtnClick}>
           Вход
         </button>
 

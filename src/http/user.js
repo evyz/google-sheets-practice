@@ -6,3 +6,10 @@ export const login = async (nickname) => {
   });
   return data;
 };
+
+export const register = async (nickname) => {
+  const { data } = await axios.post("http://localhost:8080/user/register", {
+    name: nickname,
+  });
+  return data;
+};
