@@ -3,7 +3,7 @@ import { getRooms } from "../../http/room";
 import Sheet from "../sheet/Sheet";
 import "./sheets.css";
 
-const Sheets = () => {
+const Sheets = ({user,setUser}) => {
   const [data, setData] = useState([]);
   const [popup, setPopup] = useState(false);
   const [selectedSheet, setSelectedSheet] = useState({});
@@ -42,6 +42,7 @@ const Sheets = () => {
         }}
       >
         {/* <button className="btn btn-danger" onClick={()=>}>exit</button> */}
+        <button type="button" class="btn btn-danger" onClick={()=>{setUser(""); localStorage.removeItem("nickname")}}>exit</button>
         <div>
           <button className="btn btn-success" onClick={() => setPopup(true)}>
             ADD

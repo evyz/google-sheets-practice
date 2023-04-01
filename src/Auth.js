@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Login from "./components/login/Login";
+import Sheets from "./components/sheets/sheets"
 function Auth({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsloading] = useState(true);
@@ -23,6 +24,6 @@ function Auth({ children }) {
   if (!user || user === "") {
     return <Login user={user} setUser={setUser} />;
   }
-  return children;
+  return <Sheets user={user} setUser={setUser}/>;
 }
 export default Auth;
