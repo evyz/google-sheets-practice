@@ -18,6 +18,7 @@ function Login({ user, setUser }) {
 
   function handleRegisterApi() {
     // функция на регистрацию
+
   }
 
   function handleNameChange(event) {
@@ -27,11 +28,32 @@ function Login({ user, setUser }) {
   if (isRegisterForm) {
     return (
       <div>
-        {/* Сделать форму регистрации здесь */}
+         <div className='Registration-window'>
+      <div className='Registration-block'>
+        <h1>Регистрация</h1>
+        <input
+        style={{border:"none"}}
+          className='regist-name'
+          placeholder='Введите имя'
+          value={name}
+          onChange={handleNameChange}
+        />
+                <input
+                style={{width:"300px",border:"none",margin:"5px"}}
+          className='regist-name'
+          placeholder='Введите email'
+          value={name}
+          onChange={handleNameChange}
+        />
+<button type="button" class="btn btn-primary">Вход</button>
         <span>
           Есть аккаунт?{" "}
           <span onClick={() => setIsRegisterForm(false)}>Авторизуйтесь</span>
         </span>
+      </div>
+    </div>
+        {/* Сделать форму регистрации здесь */}
+
       </div>
     );
   }
@@ -41,12 +63,13 @@ function Login({ user, setUser }) {
       <div className='Registration-block'>
         <h1>Авторизация</h1>
         <input
+        style={{border:"none",margin:"5px"}}
           className='regist-name'
           placeholder='Введите имя'
           value={name}
           onChange={handleNameChange}
         />
-        <button className='green-batton' onClick={handleBtnClick}>
+        <button class="btn btn-primary" onClick={handleBtnClick}>
           Вход
         </button>
 

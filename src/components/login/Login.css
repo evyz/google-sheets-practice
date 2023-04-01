@@ -5,10 +5,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgb(125, 126, 128);
+    color: #8064A2;
     /* background-color: rgb(18, 129, 86); */
-    background: linear-gradient(to bottom, #bdbdbd, #8f8f8f);
+    background: linear-gradient(to bottom, #d2bbe6, #c6a4e2);
 }
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #8064A2;
+    border: #8064A2;
+}
+
 .Registration-block{
     width: 600px;
     height: 400px;
@@ -19,6 +24,7 @@
     flex-direction: column;
     /* background-color: rgb(178, 241, 199); */
     background: linear-gradient(to bottom, #c8cadf, #7d7988);
+    
 }
 .regist-name{
     width: 400px;
@@ -35,3 +41,19 @@
     border: none;
     background: linear-gradient(to bottom, #bdbdbd, #8f8f8f);
 }
+
+
+
+
+
+
+
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
+    }
+    .card-registration .select-arrow {
+    top: 13px;
+    }

@@ -4,7 +4,7 @@ import Cell from "../cell/Cell";
 import "./Sheet.css";
 function Sheet({ props, backHandler }) {
   const [matrix, setMatrix] = useState([]);
-  const [counts, setCounts] = useState({ x: 4, y: 2 });
+  const [counts, setCounts] = useState({ x: 13, y: 4 });
   const [isLoading, setIsLoading] = useState(true);
 
   const handleButtonClick = (event, position) => {
