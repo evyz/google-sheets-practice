@@ -2,10 +2,20 @@ import { memo, useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Cell from "../cell/Cell";
 import "./Sheet.css";
+import { getConnectionsToThisGrid } from "../../http/room";
 function Sheet({ props, backHandler }) {
   const [matrix, setMatrix] = useState([]);
   const [counts, setCounts] = useState({ x: 13, y: 4 });
   const [isLoading, setIsLoading] = useState(true);
+  const [connections, setConnections] = useState([]);
+
+  useEffect(() => {
+    if (props?.id) {
+      getConnectionsToThisGrid(props.id).then((data) => {
+        setConnections(data);
+      });
+    }
+  }, [props]);
 
   const handleButtonClick = (event, position) => {
     if (event === "add") {
