@@ -1,14 +1,18 @@
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Cell from "../cell/Cell";
+import Users from "../sheet/Users";
 import "./Sheet.css";
-import { getConnectionsToThisGrid } from "../../http/room";
+import { getConnectionsToThisGrid, inviteUser } from "../../http/room";
 function Sheet({ props, backHandler }) {
   const [matrix, setMatrix] = useState([]);
   const [counts, setCounts] = useState({ x: 13, y: 4 });
   const [isLoading, setIsLoading] = useState(true);
   const [connections, setConnections] = useState([]);
-
+  const [friendsPopup, setFriendsPopup] = useState(false);
+  const [friendName, setFriendName] = useState("");
+  const [click, setClick] = useState(false);
+  console.log(setFriendName);
   useEffect(() => {
     if (props?.id) {
       getConnectionsToThisGrid(props.id).then((data) => {
@@ -48,31 +52,73 @@ function Sheet({ props, backHandler }) {
 
   return (
     <div>
+      {friendsPopup && (
+        <div className="popup" onClick={() => setFriendsPopup(false)}>
+          <div
+            className="popupContainer"
+            style={{ position: "relative" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Users connections={connections} />
+            <h3>Your friends</h3>
+            <input
+              className={`form-control form-control-lg ${click ? "yellow" : ""}`}
+              style={{ width: "50%" }}
+              type="text"
+              placeholder="Name"
+              onChange={(e) => setFriendName(e.target.value)}
+              onClick={()=>setClick(true)}
+            />
+            <button
+              className="btn btn-warning"
+              onClick={() => {
+                inviteUser(props.id, friendName).then((data) =>
+                  console.log(data)
+                );
+                setFriendName("");
+              }}
+            >
+              Add new friend
+            </button>
+          </div>
+        </div>
+      )}
       <div style={{ width: "100%", height: "10vh" }}>
         <button
-          type='button'
-          class='btn btn-danger'
+          type="button"
+          class="btn btn-danger"
           onClick={() => backHandler()}
         >
           Закрыть таблицу
         </button>
+        {props.author === localStorage.getItem("nickname") ? (
+          <button
+            type="button"
+            class="btn btn-warning"
+            onClick={() => setFriendsPopup(true)}
+          >
+            friends
+          </button>
+        ) : (
+          ""
+        )}
         <button
-          type='button'
-          class='btn btn-light'
+          type="button"
+          class="btn btn-light"
           onClick={() => handleButtonClick("add", "y")}
         >
           Добавить Вертикаль
         </button>
         <button
-          type='button'
-          class='btn btn-light'
+          type="button"
+          class="btn btn-light"
           onClick={() => handleButtonClick("add", "x")}
         >
           Добавить Горизонталь
         </button>
       </div>
       {!isLoading && matrix.length > 0 && (
-        <div className='default-table'>
+        <div className="default-table">
           <Table striped bordered hover>
             <thead>
               <tr>

@@ -15,3 +15,34 @@
     display: flex;
     flex-direction: row;
 }
+.popup{
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.514);
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.popupContainer{
+    width: 700px;
+    height: 500px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: aliceblue;
+}.btn-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.yellow {
+    outline: 2px solid rgb(0, 255, 0);
+    outline-offset: -2px;
+    transition: outline 0.3s ease;
+  }
+  
+  

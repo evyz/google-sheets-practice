@@ -23,3 +23,11 @@ export const getConnectionsToThisGrid = async (id) => {
   const { data } = await axios.get("http://localhost:8080/connect/" + id);
   return data;
 };
+
+export const inviteUser = async (id,name) => {
+  const { data } = await axios.post("http://localhost:8080/connect/" + id,{
+    guest:name,
+    author:localStorage.getItem("nickname")
+  });
+  return data;
+};
