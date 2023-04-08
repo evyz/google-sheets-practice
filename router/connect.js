@@ -4,7 +4,7 @@ const router = express();
 let { rooms, users, connections } = require("../utils");
 
 router.post("/:id", (req, res) => {
-  let id = req.params.id;
+  let id = Number(req.params.id);
   let author = req.body.author;
   let guest = req.body.guest;
 
@@ -37,7 +37,7 @@ router.get("/:id", (req, res) => {
   if (roomId && rooms.find((room) => room.id === roomId)) {
     let id = rooms.find((room) => room.id === roomId).id;
     let arr = [];
-    connections = connections.forEach(
+    connections.forEach(
       (connect) => connect.roomId === id && arr.push(connect.authorId)
     );
 
@@ -46,5 +46,4 @@ router.get("/:id", (req, res) => {
 
   return res.json({});
 });
-
 module.exports = router;
