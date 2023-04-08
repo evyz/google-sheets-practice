@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express();
 
-let { rooms, users, connections } = require("../utils");
+let { rooms, users, connections, tables } = require("../utils");
 
 router.get("/rooms", (req, res) => {
   const { author } = req.query;
@@ -21,6 +21,37 @@ router.get("/rooms", (req, res) => {
   }
 
   throw new Error("Not found name or author in req.body");
+});
+
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+
+  return res.json(tables.find((table) => table.id === Number(id)));
+});
+
+router.post("/table/:id", (req, res) => {
+  const { type, position } = req.body;
+  const { id } = req.params;
+
+  if (type === "add" && (position === "x" || position === "y")) {
+    if (tables.find((table) => table.id === Number(id))) {
+      let table = tables.find((table) => table.id === Number(id));
+      let tableIndex = tables.findIndex((table) => table.id === Number(id));
+      if (position === "y") {
+        let arrToPush = [];
+        for (let i = 0; i < table.fields[0].length; i++) {
+          arrToPush.push(null);
+        }
+        table.fields.push(arrToPush);
+      } else {
+        table.fields.map((field) => {
+          field.push(null);
+        });
+      }
+      tables[tableIndex] = table;
+      return res.json("done");
+    }
+  }
 });
 
 router.post("/", (req, res) => {
