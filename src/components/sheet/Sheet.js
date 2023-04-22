@@ -3,6 +3,8 @@ import Table from "react-bootstrap/Table";
 import Cell from "../cell/Cell";
 import Users from "../sheet/Users";
 import "./Sheet.css";
+import Settings from "./Settings";
+import Online from "./components/Online";
 import {
   addNewField,
   getConnectionsToThisGrid,
@@ -28,7 +30,7 @@ function Sheet({ props, backHandler }) {
   const [friendName, setFriendName] = useState("");
   const [click, setClick] = useState(false);
   const [res, setRes] = useState([]);
-
+  const [settings,setSettings]= useState(false)
   useEffect(() => {
     if (props?.id) {
       getTable(props?.id).then((data) => {
@@ -75,6 +77,14 @@ function Sheet({ props, backHandler }) {
 
   return (
     <div>
+      {settings && (
+        <div className='popup' onClick={() => setSettings(false)}>
+          <div className='popupContainer' 
+          onClick={(e) => e.stopPropagation()}>
+            <Settings/>
+          </div>
+        </div>
+      )}
       {friendsPopup && (
         <div className='popup' onClick={() => setFriendsPopup(false)}>
           <div
@@ -98,7 +108,7 @@ function Sheet({ props, backHandler }) {
               className='btn btn-warning'
               onClick={() => {
                 inviteUser(props.id, friendName).then((data) =>
-                  console.log(data)
+                console.log(data)
                 );
                 setFriendName("");
               }}
@@ -108,7 +118,7 @@ function Sheet({ props, backHandler }) {
           </div>
         </div>
       )}
-      <div style={{ width: "100%", height: "10vh" }}>
+      <div style={{ width: "90%", height: "10vh",position:"relative"}}>
         <button
           type='button'
           class='btn btn-danger'
@@ -118,15 +128,19 @@ function Sheet({ props, backHandler }) {
         </button>
         {props.author === localStorage.getItem("nickname") ? (
           <button
-            type='button'
-            class='btn btn-warning'
-            onClick={() => setFriendsPopup(true)}
+          type='button'
+          class='btn btn-warning'
+          onClick={() => setFriendsPopup(true)}
           >
             friends
           </button>
+
         ) : (
           ""
-        )}
+          )}
+        <button type="button" onClick={()=>setSettings(true)} class="btn btn-light"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+  <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+</svg></button>
         <button
           type='button'
           class='btn btn-light'
@@ -138,9 +152,10 @@ function Sheet({ props, backHandler }) {
           type='button'
           class='btn btn-light'
           onClick={() => handleButtonClick("add", "x")}
-        >
+          >
           Добавить Горизонталь
         </button>
+          <Online/>
       </div>
       {!isLoading && matrix.length > 0 && (
         <div className='default-table'>

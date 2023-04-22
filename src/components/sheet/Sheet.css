@@ -26,8 +26,8 @@
     justify-content: center;
 }
 .popupContainer{
-    width: 700px;
-    height: 500px;
+    width: 1140px;
+    height: 70vh;
     border-radius: 10px;
     display: flex;
     align-items: center;
