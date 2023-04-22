@@ -3,6 +3,7 @@ import { getRooms } from "../../http/room";
 import Sheet from "../sheet/Sheet";
 import "./sheets.css";
 import NewGrid from "../popup/newGrid/NewGrid";
+import NewsBlock from "./newsblock";
 
 const Sheets = ({ user, setUser }) => {
   const [data, setData] = useState([]);
@@ -77,6 +78,7 @@ const Sheets = ({ user, setUser }) => {
             </div>
           ))}
       </div>
+      <NewsBlock />
     </div>
   );
 };
