@@ -6,9 +6,11 @@ import SystemRow from "../../system-components/markup/row";
 import Cell from "../cell/Cell";
 import SystemCell from "../../system-components/markup/cell";
 import SystemInput from "../../system-components/search/input";
-import SystemButton from "../../system-components/functional/button"
+import SystemButton from "../../system-components/functional/button";
 function Login({ user, setUser }) {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isRegisterForm, setIsRegisterForm] = useState(false);
   // const [ bntColor, setBtnColor] = useState
 
@@ -54,7 +56,23 @@ function Login({ user, setUser }) {
               label={"Введите имя"}
               rules={{ notNull: true }}
             />
-            <SystemButton onClick={() => handleRegisterApi()}>
+            <SystemInput
+              setValue={setEmail}
+              value={email}
+              label={"Введите Почту"}
+              rules={{ notNull: true }}
+            />
+            <SystemInput
+              setValue={setPassword}
+              value={password}
+              label={"Введите пароль"}
+              rules={{ notNull: true }}
+            />
+            <SystemButton
+              deps={[name, email, password]}
+              rules={{ notNull: true }}
+              onClick={() => handleRegisterApi()}
+            >
               Зарегистрироваться
             </SystemButton>
             {/* {name == "" ?
@@ -104,7 +122,7 @@ function Login({ user, setUser }) {
             setValue={setName}
             rules={{ notNull: true }}
           />
-          <button class="btn btn-success" onClick={handleBtnClick}>
+          <button class='btn btn-success' onClick={handleBtnClick}>
             Вход
           </button>
           <span>
