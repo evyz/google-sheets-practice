@@ -6,9 +6,11 @@ import SystemRow from "../../system-components/markup/row";
 import Cell from "../cell/Cell";
 import SystemCell from "../../system-components/markup/cell";
 import SystemInput from "../../system-components/search/input";
+import SystemButton from "../../system-components/functional/button"
 function Login({ user, setUser }) {
   const [name, setName] = useState("");
   const [isRegisterForm, setIsRegisterForm] = useState(false);
+  // const [ bntColor, setBtnColor] = useState
 
   function handleBtnClick() {
     login(name)
@@ -34,33 +36,52 @@ function Login({ user, setUser }) {
 
   if (isRegisterForm) {
     return (
-      <div>
-        <div className='Registration-window'>
-          <div className='Registration-block'>
+      <SystemWrapper>
+        <SystemRow
+          styles={{
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <SystemCell size={8}>
             <h1>Регистрация</h1>
-            <input
-              style={{ border: "none" }}
-              className='regist-name'
-              placeholder='Введите имя'
+            <SystemInput
+              setValue={setName}
               value={name}
-              onChange={handleNameChange}
+              label={"Введите имя"}
+              rules={{ notNull: true }}
             />
-            <button
-              onClick={() => handleRegisterApi()}
-              type='button'
-              class='btn btn-primary'
-            >
-              Зарегистироваться
-            </button>
+            <SystemButton onClick={() => handleRegisterApi()}>
+              Зарегистрироваться
+            </SystemButton>
+            {/* {name == "" ?
+                        <button
+                        disabled = {true}
+                        class="btn btn-secondary"
+                      >
+                        Зарегистироваться
+                      </button>
+                        :
+                          <button
+                          onClick={() => handleRegisterApi()}
+                          type="button"
+                          class="btn btn-success"
+                        >
+                          Зарегистироваться
+                        </button>
+            } */}
             <span>
               Есть аккаунт?{" "}
               <span onClick={() => setIsRegisterForm(false)}>
                 Авторизуйтесь
               </span>
             </span>
-          </div>
-        </div>
-      </div>
+          </SystemCell>
+        </SystemRow>
+      </SystemWrapper>
     );
   }
 
@@ -83,7 +104,7 @@ function Login({ user, setUser }) {
             setValue={setName}
             rules={{ notNull: true }}
           />
-          <button class='btn btn-primary' onClick={handleBtnClick}>
+          <button class="btn btn-success" onClick={handleBtnClick}>
             Вход
           </button>
           <span>
@@ -95,11 +116,6 @@ function Login({ user, setUser }) {
         </SystemCell>
       </SystemRow>
     </SystemWrapper>
-    // {    <div className='Registration-window'>
-    //       <div className='Registration-block'>
-    //
-    //       </div>
-    //     </div>}
   );
 }
 export default Login;
