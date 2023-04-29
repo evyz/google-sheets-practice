@@ -1,6 +1,9 @@
-let users = [{ name: "evyz" }],
+let users = [{ name: "evyz" }, { name: "root" }],
   rooms = [{ id: 1, name: "First sheet", author: "evyz", tableId: 1 }],
-  connections = [{ roomId: 1, authorId: "evyz" }],
+  connections = [
+    { roomId: 1, authorId: "evyz" },
+    { roomId: 1, authorId: "root" },
+  ],
   tables = [
     {
       id: 1,
