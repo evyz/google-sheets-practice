@@ -12,8 +12,7 @@ const NewGrid = ({ setPopup, setResult, handler }) => {
   }
 
   return (
-    <div className='popup' onClick={() => setPopup(false)}>
-      <div className='popupContainer' onClick={(e) => e.stopPropagation()}>
+    <div>
         <h3>Enter the name of the new project</h3>
         <input
           class='form-control form-control-lg'
@@ -27,7 +26,6 @@ const NewGrid = ({ setPopup, setResult, handler }) => {
           Confirm
         </button>
       </div>
-    </div>
   );
 };
 

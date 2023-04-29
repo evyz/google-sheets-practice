@@ -4,7 +4,7 @@ import Sheet from "../sheet/Sheet";
 import "./sheets.css";
 import NewGrid from "../popup/newGrid/NewGrid";
 import NewsBlock from "./newsblock";
-
+import SystemPopup from "../../system-components/functional/popup";
 const Sheets = ({ user, setUser }) => {
   const [data, setData] = useState([]);
   const [popup, setPopup] = useState(false);
@@ -24,16 +24,18 @@ const Sheets = ({ user, setUser }) => {
   return (
     <div class='default-wrapper'>
       {popup && (
-        <NewGrid
-          setPopup={setPopup}
-          setResult={setSelectedSheet}
-          handler={() => {
-            getRooms().then((data) => {
-              setData(data);
+        <SystemPopup value={popup} setValue={setPopup}>
+                 <NewGrid
+         setPopup={setPopup}
+         setResult={setSelectedSheet}
+         handler={() => {
+           getRooms().then((data) => {
+             setData(data);
             });
-            setPopup(false);
-          }}
-        />
+           setPopup(false);
+         }}
+       />
+        </SystemPopup>
       )}
       <div
         className='default-cards'

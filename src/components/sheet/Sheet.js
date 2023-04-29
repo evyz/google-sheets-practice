@@ -11,6 +11,7 @@ import {
   getTable,
   inviteUser,
 } from "../../http/room";
+import SystemPopup from "../../system-components/functional/popup";
 
 function uuidv4() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
@@ -85,7 +86,34 @@ function Sheet({ props, backHandler }) {
           </div>
         </div>
       )}
-      {friendsPopup && (
+{friendsPopup && (
+        <SystemPopup value={friendsPopup} setValue={setFriendsPopup}>
+             <Users connections={connections} />
+            <h3>Your friends</h3>
+            <input
+              className={`form-control form-control-lg ${
+                click ? "yellow" : ""
+              }`}
+              style={{ width: "50%" }}
+              type='text'
+              placeholder='Name'
+              onChange={(e) => setFriendName(e.target.value)}
+              onClick={() => setClick(true)}
+            />
+            <button
+              className='btn btn-warning'
+              onClick={() => {
+                inviteUser(props.id, friendName).then((data) =>
+                console.log(data)
+                );
+                setFriendName("");
+              }}
+            >
+              Add new friend
+            </button>
+        </SystemPopup>
+)}
+      {/* {friendsPopup && (
         <div className='popup' onClick={() => setFriendsPopup(false)}>
           <div
             className='popupContainer'
@@ -117,7 +145,7 @@ function Sheet({ props, backHandler }) {
             </button>
           </div>
         </div>
-      )}
+      )} */}
       <div style={{ width: "90%", height: "10vh",position:"relative"}}>
         <button
           type='button'
