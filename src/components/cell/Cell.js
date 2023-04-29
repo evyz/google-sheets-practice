@@ -1,10 +1,18 @@
 import React, { memo, useEffect, useState } from "react";
 import "./Cell.css";
 
-const Cell = ({ props }) => {
+const Cell = ({ props, focusedField, setFocusedField, editors }) => {
   const [value, setValue] = useState("");
   const [isFocused, setFocused] = useState(false);
   const [isContextClicked, setIsContextClicked] = useState(false);
+
+  useEffect(() => {
+    if (isFocused) {
+      setFocusedField(props?.id);
+    } else {
+      setFocusedField(null);
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (props?.value) {
@@ -23,6 +31,11 @@ const Cell = ({ props }) => {
       onContextMenu={(e) => {
         e.preventDefault();
         setIsContextClicked(!isContextClicked);
+      }}
+      style={{
+        border: editors?.find((editor) => editor?.id === props?.id)
+          ? `1px solid orange`
+          : "",
       }}
     >
       {isContextClicked && (

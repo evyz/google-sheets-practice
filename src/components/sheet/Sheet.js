@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Cell from "../cell/Cell";
 import Users from "../sheet/Users";
@@ -31,7 +31,10 @@ function Sheet({ props, backHandler }) {
   const [friendName, setFriendName] = useState("");
   const [click, setClick] = useState(false);
   const [res, setRes] = useState([]);
-  const [settings,setSettings]= useState(false)
+  const [settings, setSettings] = useState(false);
+
+  const [focusedField, setFocusedField] = useState(null);
+
   useEffect(() => {
     if (props?.id) {
       getTable(props?.id).then((data) => {
@@ -76,43 +79,104 @@ function Sheet({ props, backHandler }) {
     setIsLoading(false);
   }, [counts]);
 
+  const [isPaused, setIsPaused] = useState(false);
+  const [response, setResponse] = useState(null);
+  const [status, setStatus] = useState("");
+  const ws = useRef(null);
+
+  const [editors, setEditors] = useState([]);
+
+  useEffect(() => {
+    if (!isPaused) {
+      ws.current = new WebSocket(
+        "ws://localhost:8080/rooms" +
+          "?nickname=" +
+          localStorage.getItem("nickname") +
+          "&roomId=" +
+          props?.id
+      ); // создаем ws соединение
+      ws.current.onopen = () => setStatus("Соединение открыто"); // callback на ивент открытия соединения
+      ws.current.onclose = () => setStatus("Соединение закрыто"); // callback на ивент закрытия соединения
+
+      gettingData();
+    }
+
+    return () => ws.current.close(); // кода меняется isPaused - соединение закрывается
+  }, [ws, isPaused]);
+
+  const gettingData = useCallback(() => {
+    if (!ws.current) return;
+
+    ws.current.onmessage = (e) => {
+      //подписка на получение данных по вебсокету
+      if (isPaused) return;
+      const message = JSON.parse(e.data);
+      if (message?.type === "select_field") {
+        let arr = [];
+        if (editors.length === 0) {
+          arr.push(message?.params);
+        } else {
+          editors.forEach((editor) => {
+            if (editor?.nickname === message?.params?.nickname) {
+            } else {
+              arr.push(editor);
+            }
+          });
+        }
+
+        setEditors(arr);
+      }
+      setResponse(message);
+    };
+  }, [isPaused]);
+
+  useEffect(() => {
+    if (focusedField) {
+      ws?.current?.send(
+        JSON.stringify({ type: "select_field", params: { id: focusedField } })
+      );
+    }
+  }, [focusedField]);
+
   return (
     <div>
       {settings && (
         <div className='popup' onClick={() => setSettings(false)}>
-          <div className='popupContainer' 
-          onClick={(e) => e.stopPropagation()}>
-            <Settings/>
+          <div className='popupContainer' onClick={(e) => e.stopPropagation()}>
+            <Settings />
           </div>
         </div>
       )}
-{friendsPopup && (
+      {editors?.map((editor) => (
+        <li>
+          {editor?.nickname} {editor?.id}
+        </li>
+      ))}
+      {friendsPopup && (
         <SystemPopup value={friendsPopup} setValue={setFriendsPopup}>
-             <Users connections={connections} />
-            <h3>Your friends</h3>
-            <input
-              className={`form-control form-control-lg ${
-                click ? "yellow" : ""
-              }`}
-              style={{ width: "50%" }}
-              type='text'
-              placeholder='Name'
-              onChange={(e) => setFriendName(e.target.value)}
-              onClick={() => setClick(true)}
-            />
-            <button
-              className='btn btn-warning'
-              onClick={() => {
-                inviteUser(props.id, friendName).then((data) =>
+          <Users connections={connections} />
+          <h3>Your friends</h3>
+          <input
+            className={`form-control form-control-lg ${click ? "yellow" : ""}`}
+            style={{ width: "50%" }}
+            type='text'
+            placeholder='Name'
+            onChange={(e) => setFriendName(e.target.value)}
+            onClick={() => setClick(true)}
+          />
+          <button
+            className='btn btn-warning'
+            onClick={() => {
+              inviteUser(props.id, friendName).then((data) =>
                 console.log(data)
-                );
-                setFriendName("");
-              }}
-            >
-              Add new friend
-            </button>
+              );
+              setFriendName("");
+            }}
+          >
+            Add new friend
+          </button>
         </SystemPopup>
-)}
+      )}
       {/* {friendsPopup && (
         <div className='popup' onClick={() => setFriendsPopup(false)}>
           <div
@@ -146,7 +210,7 @@ function Sheet({ props, backHandler }) {
           </div>
         </div>
       )} */}
-      <div style={{ width: "90%", height: "10vh",position:"relative"}}>
+      <div style={{ width: "90%", height: "10vh", position: "relative" }}>
         <button
           type='button'
           class='btn btn-danger'
@@ -156,19 +220,31 @@ function Sheet({ props, backHandler }) {
         </button>
         {props.author === localStorage.getItem("nickname") ? (
           <button
-          type='button'
-          class='btn btn-warning'
-          onClick={() => setFriendsPopup(true)}
+            type='button'
+            class='btn btn-warning'
+            onClick={() => setFriendsPopup(true)}
           >
             friends
           </button>
-
         ) : (
           ""
-          )}
-        <button type="button" onClick={()=>setSettings(true)} class="btn btn-light"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
-  <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
-</svg></button>
+        )}
+        <button
+          type='button'
+          onClick={() => setSettings(true)}
+          class='btn btn-light'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='16'
+            height='16'
+            fill='currentColor'
+            class='bi bi-gear-fill'
+            viewBox='0 0 16 16'
+          >
+            <path d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z' />
+          </svg>
+        </button>
         <button
           type='button'
           class='btn btn-light'
@@ -180,10 +256,10 @@ function Sheet({ props, backHandler }) {
           type='button'
           class='btn btn-light'
           onClick={() => handleButtonClick("add", "x")}
-          >
+        >
           Добавить Горизонталь
         </button>
-          <Online/>
+        <Online />
       </div>
       {!isLoading && matrix.length > 0 && (
         <div className='default-table'>
@@ -199,7 +275,15 @@ function Sheet({ props, backHandler }) {
             <tbody>
               {matrix.map((row) => (
                 <tr>
-                  {row.length > 0 && row.map((cell) => <Cell props={cell} />)}
+                  {row.length > 0 &&
+                    row.map((cell) => (
+                      <Cell
+                        editors={editors}
+                        props={cell}
+                        focusedField={focusedField}
+                        setFocusedField={setFocusedField}
+                      />
+                    ))}
                 </tr>
               ))}
             </tbody>

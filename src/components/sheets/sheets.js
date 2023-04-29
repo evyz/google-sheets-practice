@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { getRooms } from "../../http/room";
 import Sheet from "../sheet/Sheet";
 import "./sheets.css";
@@ -25,16 +25,16 @@ const Sheets = ({ user, setUser }) => {
     <div class='default-wrapper'>
       {popup && (
         <SystemPopup value={popup} setValue={setPopup}>
-                 <NewGrid
-         setPopup={setPopup}
-         setResult={setSelectedSheet}
-         handler={() => {
-           getRooms().then((data) => {
-             setData(data);
-            });
-           setPopup(false);
-         }}
-       />
+          <NewGrid
+            setPopup={setPopup}
+            setResult={setSelectedSheet}
+            handler={() => {
+              getRooms().then((data) => {
+                setData(data);
+              });
+              setPopup(false);
+            }}
+          />
         </SystemPopup>
       )}
       <div
