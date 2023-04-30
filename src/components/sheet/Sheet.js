@@ -34,7 +34,9 @@ function Sheet({ props, backHandler }) {
   const [settings, setSettings] = useState(false);
 
   const [focusedField, setFocusedField] = useState(null);
+  const [activeUser, setActiveUser] = useState(false)
 
+  
   useEffect(() => {
     if (props?.id) {
       getTable(props?.id).then((data) => {
@@ -48,7 +50,7 @@ function Sheet({ props, backHandler }) {
       });
     }
   }, [props]);
-
+  
   const handleButtonClick = (event, position) => {
     if (event === "add") {
       if (position === "x") {
@@ -63,7 +65,7 @@ function Sheet({ props, backHandler }) {
       addNewField({ id: props?.id, type: event, position });
     }
   };
-
+  
   useEffect(() => {
     setIsLoading(true);
     let arr = [];
@@ -74,24 +76,24 @@ function Sheet({ props, backHandler }) {
       }
       arr.push(obj);
     }
-
+    
     setMatrix(arr);
     setIsLoading(false);
   }, [counts]);
-
+  
   const [isPaused, setIsPaused] = useState(false);
   const [response, setResponse] = useState(null);
   const [status, setStatus] = useState("");
   const ws = useRef(null);
-
+  
   const [editors, setEditors] = useState([]);
-
+  
   useEffect(() => {
     if (!isPaused) {
       ws.current = new WebSocket(
         "ws://localhost:8080/rooms" +
-          "?nickname=" +
-          localStorage.getItem("nickname") +
+        "?nickname=" +
+        localStorage.getItem("nickname") +
           "&roomId=" +
           props?.id
       ); // создаем ws соединение
@@ -100,13 +102,18 @@ function Sheet({ props, backHandler }) {
 
       gettingData();
     }
-
+    
     return () => ws.current.close(); // кода меняется isPaused - соединение закрывается
   }, [ws, isPaused]);
-
+  
+  // setTimeout(function() {   
+  //   if(message?.type == Users?.connections){
+  //     setActiveUser(true)
+  //   }
+  // }, 1000);
   const gettingData = useCallback(() => {
     if (!ws.current) return;
-
+    
     ws.current.onmessage = (e) => {
       //подписка на получение данных по вебсокету
       if (isPaused) return;
@@ -123,7 +130,6 @@ function Sheet({ props, backHandler }) {
             }
           });
         }
-
         setEditors(arr);
       }
       setResponse(message);
@@ -140,6 +146,8 @@ function Sheet({ props, backHandler }) {
 
   return (
     <div>
+      {/* {activeUser && <div className="activeUse  r">В сети</div>} */}
+      <div className="activeUser">В сети</div>
       {settings && (
         <div className='popup' onClick={() => setSettings(false)}>
           <div className='popupContainer' onClick={(e) => e.stopPropagation()}>
@@ -154,7 +162,7 @@ function Sheet({ props, backHandler }) {
       ))}
       {friendsPopup && (
         <SystemPopup value={friendsPopup} setValue={setFriendsPopup}>
-          <Users connections={connections} />
+          <Users connections={connections}/>
           <h3>Your friends</h3>
           <input
             className={`form-control form-control-lg ${click ? "yellow" : ""}`}
@@ -177,39 +185,6 @@ function Sheet({ props, backHandler }) {
           </button>
         </SystemPopup>
       )}
-      {/* {friendsPopup && (
-        <div className='popup' onClick={() => setFriendsPopup(false)}>
-          <div
-            className='popupContainer'
-            style={{ position: "relative" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Users connections={connections} />
-            <h3>Your friends</h3>
-            <input
-              className={`form-control form-control-lg ${
-                click ? "yellow" : ""
-              }`}
-              style={{ width: "50%" }}
-              type='text'
-              placeholder='Name'
-              onChange={(e) => setFriendName(e.target.value)}
-              onClick={() => setClick(true)}
-            />
-            <button
-              className='btn btn-warning'
-              onClick={() => {
-                inviteUser(props.id, friendName).then((data) =>
-                console.log(data)
-                );
-                setFriendName("");
-              }}
-            >
-              Add new friend
-            </button>
-          </div>
-        </div>
-      )} */}
       <div style={{ width: "90%", height: "10vh", position: "relative" }}>
         <button
           type='button'
